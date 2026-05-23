@@ -34,7 +34,6 @@
     .wordmark { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 4px; color: var(--muted); }
     .headline { font-family: 'Bebas Neue', sans-serif; font-size: 38px; line-height: 1; color: var(--text); margin-top: 2px; letter-spacing: 1px; }
     .headline span { color: var(--accent); }
-
     .input-wrap { padding: 12px 20px; flex-shrink: 0; }
     .input-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; width: 100%; }
     textarea {
@@ -44,25 +43,13 @@
     }
     textarea::placeholder { color: var(--muted); }
     textarea:focus { outline: none; }
-
     .match-bar { display: flex; align-items: center; gap: 8px; margin-top: 8px; min-height: 20px; flex-wrap: wrap; }
-    .match-tag {
-      font-size: 10px; padding: 2px 8px; border-radius: 100px;
-      background: var(--accent); color: #080a0f; font-weight: 700;
-      letter-spacing: 1px; animation: popIn 0.2s ease; flex-shrink: 0;
-    }
-    .match-why {
-      font-size: 10px; color: var(--muted); font-style: italic;
-      line-height: 1.4; animation: fadeIn 0.3s ease;
-    }
-
+    .match-tag { font-size: 10px; padding: 2px 8px; border-radius: 100px; background: var(--accent); color: #080a0f; font-weight: 700; letter-spacing: 1px; animation: popIn 0.2s ease; flex-shrink: 0; }
+    .match-why { font-size: 10px; color: var(--muted); font-style: italic; line-height: 1.4; animation: fadeIn 0.3s ease; }
     @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
     .section-label { font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; padding: 0 20px; margin-bottom: 8px; flex-shrink: 0; }
-
     .models-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 20px; overflow-y: auto; flex: 1; }
-
     .model-btn {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 14px; padding: 14px; cursor: pointer; text-align: left;
@@ -74,20 +61,16 @@
     .model-btn.recommended { opacity: 1; filter: none; border-color: var(--model-color); box-shadow: 0 0 18px -6px var(--model-color); }
     .model-btn.neutral { opacity: 1; filter: none; }
     .model-btn:active { transform: scale(0.97); }
-
     .model-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: var(--model-color-alpha); color: var(--model-color); }
     .model-name { font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: var(--text); letter-spacing: 1px; line-height: 1; }
     .model-desc { font-size: 9px; color: var(--muted); line-height: 1.4; }
     .model-arrow { position: absolute; top: 12px; right: 12px; color: var(--muted); font-size: 11px; transition: all 0.15s ease; }
     .model-btn.recommended .model-arrow { color: var(--model-color); }
-
     .best-badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #080a0f; font-size: 8px; font-weight: 700; letter-spacing: 1px; padding: 2px 6px; border-radius: 100px; display: none; }
     .model-btn.top-pick .best-badge { display: block; }
     .model-btn.top-pick .model-arrow { display: none; }
-
     .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--accent); color: #080a0f; font-size: 12px; font-weight: 700; padding: 10px 20px; border-radius: 100px; transition: transform 0.3s ease; z-index: 200; white-space: nowrap; }
     .toast.show { transform: translateX(-50%) translateY(0); }
-
     .model-btn { animation: fadeIn 0.4s ease forwards; }
     .model-btn:nth-child(1) { animation-delay: 0.05s; }
     .model-btn:nth-child(2) { animation-delay: 0.1s; }
@@ -102,7 +85,6 @@
     <div class="wordmark">AI Launcher</div>
     <div class="headline">ASK <span>ANY</span><br>MODEL</div>
   </header>
-
   <div class="input-wrap">
     <div class="input-box">
       <textarea id="prompt" placeholder="Type your question and models will sort themselves..." maxlength="2000" oninput="handleInput(this)"></textarea>
@@ -112,7 +94,6 @@
       </div>
     </div>
   </div>
-
   <div class="section-label" id="section-label">— Choose your model</div>
   <div class="models-grid" id="grid"></div>
   <div class="toast" id="toast"></div>
@@ -126,7 +107,14 @@
         icon: '⬡',
         color: '#D97757',
         why: 'Great at code, logic, writing, and deep reasoning.',
-        keywords: ['code','coding','program','programming','debug','function','bug','script','python','javascript','java','css','html','algorithm','logic','math','equation','calculate','reasoning','analyze','analysis','explain','write','essay','summarize','summary','edit','proofread','regex','sql','database','api','error','syntax','compile','react','node','typescript','rust','c++','golang','refactor','test','unit test','documentation','comment','class','object','loop','array','string','variable','recursion'],
+        keywords: ['code','coding','program','programming','debug','function','bug','script','python','javascript','java','css','html','algorithm','logic','math','equation','calculate','reasoning','analyze','analysis','explain','write','essay','summarize','summary','edit','proofread','regex','sql','database','api','error','syntax','compile','react','node','typescript','rust','refactor','test','documentation','loop','array','recursion'],
+        // Try app deep link first, fall back to web
+        launch(q) {
+          const web = 'https://claude.ai/new?q=' + encodeURIComponent(q);
+          // Android intent for Claude app
+          const intent = `intent://new?q=${encodeURIComponent(q)}#Intent;scheme=https;package=com.anthropic.claude;S.browser_fallback_url=${encodeURIComponent(web)};end`;
+          window.location.href = intent;
+        }
       },
       {
         id: 'gemini',
@@ -135,7 +123,12 @@
         icon: '✦',
         color: '#4A8EF5',
         why: 'Tightly integrated with Google services, search, and real-time info.',
-        keywords: ['google','android','pixel','chrome','gmail','youtube','maps','drive','search','find','look up','current','today','weather','translate','image','photo','picture','samsung','iphone','phone','app','play store','google docs','google sheets','chromebook','nest','google home','fitbit','wearos','android auto','google pay','gemini','bard'],
+        keywords: ['google','android','pixel','chrome','gmail','youtube','maps','drive','weather','translate','image','photo','picture','samsung','iphone','phone','app','play store','google docs','google sheets','chromebook','nest','google home','fitbit','android auto','google pay'],
+        launch(q) {
+          const web = 'https://gemini.google.com/app?q=' + encodeURIComponent(q);
+          const intent = `intent://app?q=${encodeURIComponent(q)}#Intent;scheme=https;package=com.google.android.apps.bard;S.browser_fallback_url=${encodeURIComponent(web)};end`;
+          window.location.href = intent;
+        }
       },
       {
         id: 'perplexity',
@@ -144,7 +137,12 @@
         icon: '⊕',
         color: '#20BFBF',
         why: 'Pulls live sources from the web with citations — ideal for research.',
-        keywords: ['research','source','article','paper','study','who is','what is','when did','where is','why did','how does','fact','statistic','data','report','published','according','reference','citation','find information','look up','what happened','history of','origin of','definition','meaning','evidence','proof','survey','poll','latest news','recent','breaking','journal','academic','scientific'],
+        keywords: ['research','source','article','paper','study','who is','what is','when did','where is','why did','how does','fact','statistic','data','report','published','reference','citation','find information','look up','what happened','history of','origin of','definition','meaning','evidence','survey','poll','latest news','recent','breaking','journal','academic','scientific'],
+        launch(q) {
+          const web = 'https://www.perplexity.ai/search?q=' + encodeURIComponent(q);
+          const intent = `intent://www.perplexity.ai/search?q=${encodeURIComponent(q)}#Intent;scheme=https;package=ai.perplexity.app.android;S.browser_fallback_url=${encodeURIComponent(web)};end`;
+          window.location.href = intent;
+        }
       },
       {
         id: 'grok',
@@ -152,8 +150,13 @@
         desc: 'xAI · Real-time & X/Twitter',
         icon: '✕',
         color: '#E8E8E8',
-        why: 'Plugged into X/Twitter and live events — best for what\'s happening now.',
-        keywords: ['twitter','x.com','tweet','elon','musk','trending','viral','meme','social media','breaking news','right now','happening','live','sports score','game score','nfl','nba','nhl','mlb','nascar','political','politics','election','vote','congress','president','celebrity','gossip','pop culture','drama','controversy','reaction','thread','post','retweet','follow'],
+        why: "Plugged into X/Twitter and live events — best for what's happening now.",
+        keywords: ['twitter','x.com','tweet','elon','musk','trending','viral','meme','social media','breaking news','right now','happening','live','sports score','nfl','nba','nhl','mlb','nascar','political','politics','election','vote','congress','president','celebrity','gossip','pop culture','drama','controversy'],
+        launch(q) {
+          const web = 'https://x.com/i/grok?text=' + encodeURIComponent(q);
+          const intent = `intent://i/grok?text=${encodeURIComponent(q)}#Intent;scheme=https;package=com.twitter.android;S.browser_fallback_url=${encodeURIComponent(web)};end`;
+          window.location.href = intent;
+        }
       },
       {
         id: 'chatgpt',
@@ -162,7 +165,12 @@
         icon: '◎',
         color: '#19C37D',
         why: 'Excels at creative tasks, brainstorming, recipes, travel, and open-ended chat.',
-        keywords: ['story','creative','poem','fiction','character','plot','brainstorm','idea','imagine','roleplay','recipe','cook','food','meal','ingredient','travel','plan','trip','vacation','destination','advice','recommend','suggest','compare','pros and cons','difference','vs','versus','review','opinion','help me decide','should i','what would you','fun','funny','joke','humor','game','quiz','riddle','haiku','song lyrics','screenplay','dialogue','interview','speech','letter','cover letter'],
+        keywords: ['story','creative','poem','fiction','character','plot','brainstorm','idea','imagine','roleplay','recipe','cook','food','meal','ingredient','travel','plan','trip','vacation','destination','advice','recommend','suggest','compare','pros and cons','difference','vs','versus','review','opinion','help me decide','should i','fun','funny','joke','humor','game','quiz','riddle','song','dialogue','interview','speech','cover letter'],
+        launch(q) {
+          const web = 'https://chatgpt.com/?q=' + encodeURIComponent(q);
+          const intent = `intent://#Intent;scheme=openai-chatgpt;S.query=${encodeURIComponent(q)};package=com.openai.chatgpt;S.browser_fallback_url=${encodeURIComponent(web)};end`;
+          window.location.href = intent;
+        }
       },
       {
         id: 'copilot',
@@ -171,7 +179,12 @@
         icon: '❖',
         color: '#7B5EF6',
         why: 'Built for Microsoft Office and professional workplace tasks.',
-        keywords: ['word','excel','powerpoint','office','microsoft','windows','outlook','teams','bing','document','spreadsheet','presentation','slide','pdf','format','template','work','business','professional','email draft','report','meeting','schedule','productivity','onedrive','sharepoint','pivot table','formula','macro','vba','chart','graph','budget','invoice','proposal','resume','cv','linkedin','workplace','memo','agenda','minutes'],
+        keywords: ['word','excel','powerpoint','office','microsoft','windows','outlook','teams','bing','document','spreadsheet','presentation','slide','pdf','format','template','work','business','professional','email draft','report','meeting','schedule','productivity','onedrive','sharepoint','pivot table','formula','macro','budget','invoice','proposal','resume','cv','linkedin','workplace','memo','agenda'],
+        launch(q) {
+          const web = 'https://copilot.microsoft.com/?q=' + encodeURIComponent(q);
+          const intent = `intent://copilot.microsoft.com/?q=${encodeURIComponent(q)}#Intent;scheme=https;package=com.microsoft.copilot;S.browser_fallback_url=${encodeURIComponent(web)};end`;
+          window.location.href = intent;
+        }
       },
     ];
 
@@ -180,9 +193,7 @@
       const scores = {};
       models.forEach(m => {
         let score = 0;
-        m.keywords.forEach(kw => {
-          if (q.includes(kw)) score += kw.split(' ').length * 2;
-        });
+        m.keywords.forEach(kw => { if (q.includes(kw)) score += kw.split(' ').length * 2; });
         scores[m.id] = score;
       });
       return scores;
@@ -193,65 +204,38 @@
       const tag = document.getElementById('match-tag');
       const why = document.getElementById('match-why');
       const label = document.getElementById('section-label');
-
       if (!q) {
-        document.querySelectorAll('.model-btn').forEach(btn => {
-          btn.classList.remove('recommended','top-pick');
-          btn.classList.add('neutral');
-        });
-        tag.style.display = 'none';
-        why.textContent = '';
-        label.textContent = '— Choose your model';
+        document.querySelectorAll('.model-btn').forEach(btn => { btn.classList.remove('recommended','top-pick'); btn.classList.add('neutral'); });
+        tag.style.display = 'none'; why.textContent = ''; label.textContent = '— Choose your model';
         return;
       }
-
       const scores = scoreModels(q);
       const maxScore = Math.max(...Object.values(scores));
       const hasMatches = maxScore > 0;
-
       document.querySelectorAll('.model-btn').forEach(btn => {
-        const id = btn.dataset.id;
-        const score = scores[id];
+        const id = btn.dataset.id; const score = scores[id];
         btn.classList.remove('recommended','top-pick','neutral');
-        if (!hasMatches) {
-          btn.classList.add('neutral');
-        } else if (score === maxScore) {
-          btn.classList.add('recommended','top-pick');
-        } else if (score > 0) {
-          btn.classList.add('recommended');
-        }
+        if (!hasMatches) { btn.classList.add('neutral'); }
+        else if (score === maxScore) { btn.classList.add('recommended','top-pick'); }
+        else if (score > 0) { btn.classList.add('recommended'); }
       });
-
-      // Re-sort grid
       if (hasMatches) {
         const grid = document.getElementById('grid');
         const btns = [...grid.querySelectorAll('.model-btn')];
         btns.sort((a, b) => (scores[b.dataset.id] || 0) - (scores[a.dataset.id] || 0));
         btns.forEach(b => grid.appendChild(b));
-
         const topModel = models.find(m => m.id === btns[0].dataset.id);
-        tag.textContent = topModel.name.toUpperCase();
-        tag.style.display = 'inline-block';
-        why.textContent = topModel.why;
-        label.textContent = '— Sorted by relevance';
+        tag.textContent = topModel.name.toUpperCase(); tag.style.display = 'inline-block';
+        why.textContent = topModel.why; label.textContent = '— Sorted by relevance';
       } else {
-        tag.style.display = 'none';
-        why.textContent = '';
-        label.textContent = '— Choose your model';
+        tag.style.display = 'none'; why.textContent = ''; label.textContent = '— Choose your model';
       }
     }
 
     function showToast(msg) {
       const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
+      t.textContent = msg; t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2000);
-    }
-
-    function launch(model) {
-      const q = document.getElementById('prompt').value.trim();
-      if (!q) { showToast('Type a question first!'); return; }
-      window.open(model.url(q), '_blank');
     }
 
     const grid = document.getElementById('grid');
@@ -268,7 +252,11 @@
         <div class="model-desc">${m.desc}</div>
         <div class="model-arrow">↗</div>
       `;
-      btn.addEventListener('click', () => launch(m));
+      btn.addEventListener('click', () => {
+        const q = document.getElementById('prompt').value.trim();
+        if (!q) { showToast('Type a question first!'); return; }
+        m.launch(q);
+      });
       grid.appendChild(btn);
     });
 
