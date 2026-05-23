@@ -14,7 +14,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg: #080a0f;
       --surface: #0e1117;
@@ -23,253 +22,73 @@
       --muted: #3a4060;
       --accent: #e8f020;
     }
-
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Space Mono', monospace;
-      overflow: hidden;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-    }
-
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; overflow: hidden; }
+    body { display: flex; flex-direction: column; height: 100dvh; }
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 100;
-      opacity: 0.4;
+      pointer-events: none; z-index: 100; opacity: 0.4;
     }
-
-    header {
-      padding: 20px 20px 0;
-      flex-shrink: 0;
-    }
-
-    .wordmark {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 13px;
-      letter-spacing: 4px;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-
-    .headline {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 42px;
-      line-height: 1;
-      color: var(--text);
-      margin-top: 2px;
-      letter-spacing: 1px;
-    }
-
+    header { padding: 16px 20px 0; flex-shrink: 0; }
+    .wordmark { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 4px; color: var(--muted); }
+    .headline { font-family: 'Bebas Neue', sans-serif; font-size: 38px; line-height: 1; color: var(--text); margin-top: 2px; letter-spacing: 1px; }
     .headline span { color: var(--accent); }
 
-    .input-wrap {
-      padding: 16px 20px;
-      flex-shrink: 0;
-    }
-
-    .input-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      width: 100%;
-    }
-
+    .input-wrap { padding: 12px 20px; flex-shrink: 0; }
+    .input-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; width: 100%; }
     textarea {
-      width: 100%;
-      background: none;
-      border: none;
-      color: var(--text);
-      font-family: 'Space Mono', monospace;
-      font-size: 14px;
-      line-height: 1.6;
-      resize: none;
-      min-height: 72px;
-      max-height: 140px;
-      overflow-y: auto;
+      width: 100%; background: none; border: none; color: var(--text);
+      font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.6;
+      resize: none; min-height: 64px; max-height: 120px; overflow-y: auto;
     }
-
     textarea::placeholder { color: var(--muted); }
     textarea:focus { outline: none; }
 
-    /* Match indicator */
-    .match-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-      min-height: 18px;
-    }
-
-    .match-label {
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 1px;
-    }
-
+    .match-bar { display: flex; align-items: center; gap: 8px; margin-top: 8px; min-height: 20px; flex-wrap: wrap; }
     .match-tag {
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 100px;
-      background: var(--accent);
-      color: #080a0f;
-      font-weight: 700;
-      letter-spacing: 1px;
-      animation: popIn 0.2s ease;
+      font-size: 10px; padding: 2px 8px; border-radius: 100px;
+      background: var(--accent); color: #080a0f; font-weight: 700;
+      letter-spacing: 1px; animation: popIn 0.2s ease; flex-shrink: 0;
+    }
+    .match-why {
+      font-size: 10px; color: var(--muted); font-style: italic;
+      line-height: 1.4; animation: fadeIn 0.3s ease;
     }
 
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    .section-label {
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: var(--muted);
-      text-transform: uppercase;
-      padding: 0 20px;
-      margin-bottom: 10px;
-      flex-shrink: 0;
-    }
+    .section-label { font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; padding: 0 20px; margin-bottom: 8px; flex-shrink: 0; }
 
-    .models-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      padding: 0 20px 20px;
-      overflow-y: auto;
-      flex: 1;
-    }
+    .models-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 20px; overflow-y: auto; flex: 1; }
 
     .model-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px; cursor: pointer; text-align: left;
+      transition: all 0.25s ease; position: relative; overflow: hidden;
       -webkit-tap-highlight-color: transparent;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      opacity: 0.45;
-      filter: grayscale(0.6);
+      display: flex; flex-direction: column; gap: 6px;
+      opacity: 0.4; filter: grayscale(0.7);
     }
+    .model-btn.recommended { opacity: 1; filter: none; border-color: var(--model-color); box-shadow: 0 0 18px -6px var(--model-color); }
+    .model-btn.neutral { opacity: 1; filter: none; }
+    .model-btn:active { transform: scale(0.97); }
 
-    .model-btn.recommended {
-      opacity: 1;
-      filter: none;
-      border-color: var(--model-color);
-      box-shadow: 0 0 16px -4px var(--model-color-alpha);
-    }
+    .model-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: var(--model-color-alpha); color: var(--model-color); }
+    .model-name { font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: var(--text); letter-spacing: 1px; line-height: 1; }
+    .model-desc { font-size: 9px; color: var(--muted); line-height: 1.4; }
+    .model-arrow { position: absolute; top: 12px; right: 12px; color: var(--muted); font-size: 11px; transition: all 0.15s ease; }
+    .model-btn.recommended .model-arrow { color: var(--model-color); }
 
-    .model-btn.neutral {
-      opacity: 1;
-      filter: none;
-    }
-
-    .model-btn:active {
-      transform: scale(0.97);
-    }
-
-    .model-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-      background: var(--model-color-alpha);
-      color: var(--model-color);
-    }
-
-    .model-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      color: var(--text);
-      letter-spacing: 1px;
-      line-height: 1;
-    }
-
-    .model-desc {
-      font-size: 10px;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .model-arrow {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      color: var(--muted);
-      font-size: 12px;
-      transition: all 0.15s ease;
-    }
-
-    .model-btn.recommended .model-arrow {
-      color: var(--model-color);
-    }
-
-    /* Badge for top pick */
-    .best-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: var(--accent);
-      color: #080a0f;
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      padding: 2px 6px;
-      border-radius: 100px;
-      display: none;
-    }
-
+    .best-badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #080a0f; font-size: 8px; font-weight: 700; letter-spacing: 1px; padding: 2px 6px; border-radius: 100px; display: none; }
     .model-btn.top-pick .best-badge { display: block; }
     .model-btn.top-pick .model-arrow { display: none; }
 
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--accent);
-      color: #080a0f;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 10px 20px;
-      border-radius: 100px;
-      transition: transform 0.3s ease;
-      z-index: 200;
-      white-space: nowrap;
-    }
-
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--accent); color: #080a0f; font-size: 12px; font-weight: 700; padding: 10px 20px; border-radius: 100px; transition: transform 0.3s ease; z-index: 200; white-space: nowrap; }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .model-btn {
-      animation: fadeIn 0.4s ease forwards;
-    }
+    .model-btn { animation: fadeIn 0.4s ease forwards; }
     .model-btn:nth-child(1) { animation-delay: 0.05s; }
     .model-btn:nth-child(2) { animation-delay: 0.1s; }
     .model-btn:nth-child(3) { animation-delay: 0.15s; }
@@ -279,7 +98,6 @@
   </style>
 </head>
 <body>
-
   <header>
     <div class="wordmark">AI Launcher</div>
     <div class="headline">ASK <span>ANY</span><br>MODEL</div>
@@ -287,23 +105,16 @@
 
   <div class="input-wrap">
     <div class="input-box">
-      <textarea
-        id="prompt"
-        placeholder="Type your question and models will sort themselves..."
-        maxlength="2000"
-        oninput="handleInput(this)"
-      ></textarea>
+      <textarea id="prompt" placeholder="Type your question and models will sort themselves..." maxlength="2000" oninput="handleInput(this)"></textarea>
       <div class="match-bar">
-        <span class="match-label" id="match-label"></span>
         <span class="match-tag" id="match-tag" style="display:none"></span>
+        <span class="match-why" id="match-why"></span>
       </div>
     </div>
   </div>
 
   <div class="section-label" id="section-label">— Choose your model</div>
-
   <div class="models-grid" id="grid"></div>
-
   <div class="toast" id="toast"></div>
 
   <script>
@@ -314,8 +125,8 @@
         desc: 'Anthropic · Code & reasoning',
         icon: '⬡',
         color: '#D97757',
-        keywords: ['code','coding','program','programming','debug','function','bug','script','python','javascript','java','css','html','algorithm','logic','math','equation','calculate','reasoning','analyze','analysis','explain','write','essay','summarize','summary','edit','proofread','regex','sql','database','api','error','syntax','compile','react','node','typescript','rust','c++','golang'],
-        url: q => `https://claude.ai/new?q=${encodeURIComponent(q)}`,
+        why: 'Great at code, logic, writing, and deep reasoning.',
+        keywords: ['code','coding','program','programming','debug','function','bug','script','python','javascript','java','css','html','algorithm','logic','math','equation','calculate','reasoning','analyze','analysis','explain','write','essay','summarize','summary','edit','proofread','regex','sql','database','api','error','syntax','compile','react','node','typescript','rust','c++','golang','refactor','test','unit test','documentation','comment','class','object','loop','array','string','variable','recursion'],
       },
       {
         id: 'gemini',
@@ -323,8 +134,8 @@
         desc: 'Google · Search & knowledge',
         icon: '✦',
         color: '#4A8EF5',
-        keywords: ['google','android','pixel','chrome','gmail','youtube','maps','drive','search','find','look up','current','today','weather','news','latest','recent','update','stock','price','translate','image','photo','picture','samsung','iphone','phone','app','play store'],
-        url: q => `https://gemini.google.com/app?q=${encodeURIComponent(q)}`,
+        why: 'Tightly integrated with Google services, search, and real-time info.',
+        keywords: ['google','android','pixel','chrome','gmail','youtube','maps','drive','search','find','look up','current','today','weather','translate','image','photo','picture','samsung','iphone','phone','app','play store','google docs','google sheets','chromebook','nest','google home','fitbit','wearos','android auto','google pay','gemini','bard'],
       },
       {
         id: 'perplexity',
@@ -332,8 +143,8 @@
         desc: 'Real-time web search',
         icon: '⊕',
         color: '#20BFBF',
-        keywords: ['search','find','look up','research','source','article','paper','study','who is','what is','when did','where is','why did','how does','fact','statistic','data','report','published','according','reference','citation','breaking','happened','event','trending'],
-        url: q => `https://www.perplexity.ai/search?q=${encodeURIComponent(q)}`,
+        why: 'Pulls live sources from the web with citations — ideal for research.',
+        keywords: ['research','source','article','paper','study','who is','what is','when did','where is','why did','how does','fact','statistic','data','report','published','according','reference','citation','find information','look up','what happened','history of','origin of','definition','meaning','evidence','proof','survey','poll','latest news','recent','breaking','journal','academic','scientific'],
       },
       {
         id: 'grok',
@@ -341,8 +152,8 @@
         desc: 'xAI · Real-time & X/Twitter',
         icon: '✕',
         color: '#E8E8E8',
-        keywords: ['twitter','x.com','tweet','elon','musk','trending','viral','meme','social media','breaking news','right now','happening','live','sports','game','score','nfl','nba','nhl','mlb','political','politics','election','vote','congress','president','celebrity','gossip'],
-        url: q => `https://x.com/i/grok?text=${encodeURIComponent(q)}`,
+        why: 'Plugged into X/Twitter and live events — best for what\'s happening now.',
+        keywords: ['twitter','x.com','tweet','elon','musk','trending','viral','meme','social media','breaking news','right now','happening','live','sports score','game score','nfl','nba','nhl','mlb','nascar','political','politics','election','vote','congress','president','celebrity','gossip','pop culture','drama','controversy','reaction','thread','post','retweet','follow'],
       },
       {
         id: 'chatgpt',
@@ -350,53 +161,47 @@
         desc: 'OpenAI · Versatile & creative',
         icon: '◎',
         color: '#19C37D',
-        keywords: ['story','creative','write','poem','fiction','character','plot','brainstorm','idea','imagine','roleplay','recipe','cook','food','travel','plan','trip','vacation','advice','help me','what should','recommend','suggest','compare','pros and cons','difference','vs','versus','review','opinion','chat','talk'],
-        url: q => `https://chatgpt.com/?q=${encodeURIComponent(q)}`,
+        why: 'Excels at creative tasks, brainstorming, recipes, travel, and open-ended chat.',
+        keywords: ['story','creative','poem','fiction','character','plot','brainstorm','idea','imagine','roleplay','recipe','cook','food','meal','ingredient','travel','plan','trip','vacation','destination','advice','recommend','suggest','compare','pros and cons','difference','vs','versus','review','opinion','help me decide','should i','what would you','fun','funny','joke','humor','game','quiz','riddle','haiku','song lyrics','screenplay','dialogue','interview','speech','letter','cover letter'],
       },
       {
         id: 'copilot',
         name: 'Copilot',
-        desc: 'Microsoft · GPT-4 powered',
+        desc: 'Microsoft · Office & productivity',
         icon: '❖',
         color: '#7B5EF6',
-        keywords: ['word','excel','powerpoint','office','microsoft','windows','outlook','teams','bing','document','spreadsheet','presentation','slide','pdf','format','template','work','business','professional','email','report','meeting','schedule','productivity'],
-        url: q => `https://copilot.microsoft.com/?q=${encodeURIComponent(q)}`,
+        why: 'Built for Microsoft Office and professional workplace tasks.',
+        keywords: ['word','excel','powerpoint','office','microsoft','windows','outlook','teams','bing','document','spreadsheet','presentation','slide','pdf','format','template','work','business','professional','email draft','report','meeting','schedule','productivity','onedrive','sharepoint','pivot table','formula','macro','vba','chart','graph','budget','invoice','proposal','resume','cv','linkedin','workplace','memo','agenda','minutes'],
       },
     ];
 
-    let currentScores = {};
-
     function scoreModels(query) {
       const q = query.toLowerCase();
-      const words = q.split(/\s+/);
       const scores = {};
-
       models.forEach(m => {
         let score = 0;
         m.keywords.forEach(kw => {
-          if (q.includes(kw)) {
-            // longer keyword matches = more specific = higher score
-            score += kw.split(' ').length * 2;
-          }
+          if (q.includes(kw)) score += kw.split(' ').length * 2;
         });
         scores[m.id] = score;
       });
-
       return scores;
     }
 
     function handleInput(el) {
       const q = el.value.trim();
+      const tag = document.getElementById('match-tag');
+      const why = document.getElementById('match-why');
+      const label = document.getElementById('section-label');
 
       if (!q) {
-        // Reset all to neutral
         document.querySelectorAll('.model-btn').forEach(btn => {
           btn.classList.remove('recommended','top-pick');
           btn.classList.add('neutral');
         });
-        document.getElementById('match-label').textContent = '';
-        document.getElementById('match-tag').style.display = 'none';
-        document.getElementById('section-label').textContent = '— Choose your model';
+        tag.style.display = 'none';
+        why.textContent = '';
+        label.textContent = '— Choose your model';
         return;
       }
 
@@ -404,23 +209,20 @@
       const maxScore = Math.max(...Object.values(scores));
       const hasMatches = maxScore > 0;
 
-      // Update UI
       document.querySelectorAll('.model-btn').forEach(btn => {
         const id = btn.dataset.id;
         const score = scores[id];
         btn.classList.remove('recommended','top-pick','neutral');
-
         if (!hasMatches) {
           btn.classList.add('neutral');
-        } else if (score === maxScore && maxScore > 0) {
+        } else if (score === maxScore) {
           btn.classList.add('recommended','top-pick');
         } else if (score > 0) {
           btn.classList.add('recommended');
         }
-        // else stays dimmed (default)
       });
 
-      // Re-sort grid: top picks first
+      // Re-sort grid
       if (hasMatches) {
         const grid = document.getElementById('grid');
         const btns = [...grid.querySelectorAll('.model-btn')];
@@ -428,15 +230,14 @@
         btns.forEach(b => grid.appendChild(b));
 
         const topModel = models.find(m => m.id === btns[0].dataset.id);
-        document.getElementById('match-label').textContent = 'Best match:';
-        const tag = document.getElementById('match-tag');
         tag.textContent = topModel.name.toUpperCase();
         tag.style.display = 'inline-block';
-        document.getElementById('section-label').textContent = '— Sorted by relevance';
+        why.textContent = topModel.why;
+        label.textContent = '— Sorted by relevance';
       } else {
-        document.getElementById('match-label').textContent = '';
-        document.getElementById('match-tag').style.display = 'none';
-        document.getElementById('section-label').textContent = '— Choose your model';
+        tag.style.display = 'none';
+        why.textContent = '';
+        label.textContent = '— Choose your model';
       }
     }
 
@@ -453,7 +254,6 @@
       window.open(model.url(q), '_blank');
     }
 
-    // Render grid
     const grid = document.getElementById('grid');
     models.forEach(m => {
       const btn = document.createElement('button');
