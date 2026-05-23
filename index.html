@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#080a0f" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="AI Launch" />
+  <title>AI Launcher</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080a0f;
+      --surface: #0e1117;
+      --border: #1a1f2e;
+      --text: #dde2f0;
+      --muted: #3a4060;
+      --accent: #e8f020;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    header {
+      padding: 20px 20px 0;
+      flex-shrink: 0;
+    }
+
+    .wordmark {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      line-height: 1;
+      color: var(--text);
+      margin-top: 2px;
+      letter-spacing: 1px;
+    }
+
+    .headline span {
+      color: var(--accent);
+    }
+
+    /* Input area */
+    .input-wrap {
+      padding: 16px 20px;
+      flex-shrink: 0;
+    }
+
+    .input-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      width: 100%;
+      position: relative;
+    }
+
+    textarea {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: none;
+      min-height: 80px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    textarea::placeholder { color: var(--muted); }
+    textarea:focus { outline: none; }
+
+    .char-count {
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 6px;
+    }
+
+    /* Models grid */
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--muted);
+      text-transform: uppercase;
+      padding: 0 20px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+
+    .models-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 20px;
+      overflow-y: auto;
+      flex: 1;
+      padding-bottom: 20px;
+    }
+
+    .model-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      position: relative;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .model-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--model-color);
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .model-btn:active::before { opacity: 0.08; }
+    .model-btn:active { transform: scale(0.97); border-color: var(--model-color); }
+
+    .model-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--model-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .model-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      color: var(--text);
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .model-desc {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .model-arrow {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      transition: transform 0.15s ease, color 0.15s ease;
+    }
+
+    .model-btn:active .model-arrow {
+      transform: translate(2px, -2px);
+      color: var(--model-color);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--accent);
+      color: #080a0f;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 100px;
+      transition: transform 0.3s ease;
+      z-index: 200;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .model-btn {
+      animation: fadeIn 0.4s ease forwards;
+      opacity: 0;
+    }
+    .model-btn:nth-child(1) { animation-delay: 0.05s; }
+    .model-btn:nth-child(2) { animation-delay: 0.1s; }
+    .model-btn:nth-child(3) { animation-delay: 0.15s; }
+    .model-btn:nth-child(4) { animation-delay: 0.2s; }
+    .model-btn:nth-child(5) { animation-delay: 0.25s; }
+    .model-btn:nth-child(6) { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wordmark">AI Launcher</div>
+    <div class="headline">ASK <span>ANY</span><br>MODEL</div>
+  </header>
+
+  <div class="input-wrap">
+    <div class="input-box">
+      <textarea
+        id="prompt"
+        placeholder="Type your question here, then tap a model..."
+        maxlength="2000"
+        oninput="updateCount(this)"
+      ></textarea>
+      <div class="char-count"><span id="count">0</span> / 2000</div>
+    </div>
+  </div>
+
+  <div class="section-label">— Choose your model</div>
+
+  <div class="models-grid" id="grid"></div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const models = [
+      {
+        id: 'gemini',
+        name: 'Gemini',
+        desc: 'Google · Search & knowledge',
+        icon: '✦',
+        color: '#4A8EF5',
+        url: q => `https://gemini.google.com/app?q=${encodeURIComponent(q)}`,
+        fallback: 'https://gemini.google.com'
+      },
+      {
+        id: 'chatgpt',
+        name: 'ChatGPT',
+        desc: 'OpenAI · Versatile & creative',
+        icon: '◎',
+        color: '#19C37D',
+        url: q => `https://chatgpt.com/?q=${encodeURIComponent(q)}`,
+        fallback: 'https://chatgpt.com'
+      },
+      {
+        id: 'claude',
+        name: 'Claude',
+        desc: 'Anthropic · Code & reasoning',
+        icon: '⬡',
+        color: '#D97757',
+        url: q => `https://claude.ai/new?q=${encodeURIComponent(q)}`,
+        fallback: 'https://claude.ai'
+      },
+      {
+        id: 'perplexity',
+        name: 'Perplexity',
+        desc: 'Real-time web search',
+        icon: '⊕',
+        color: '#20BFBF',
+        url: q => `https://www.perplexity.ai/search?q=${encodeURIComponent(q)}`,
+        fallback: 'https://www.perplexity.ai'
+      },
+      {
+        id: 'grok',
+        name: 'Grok',
+        desc: 'xAI · Real-time & X/Twitter',
+        icon: '✕',
+        color: '#E8E8E8',
+        url: q => `https://x.com/i/grok?text=${encodeURIComponent(q)}`,
+        fallback: 'https://x.com/i/grok'
+      },
+      {
+        id: 'copilot',
+        name: 'Copilot',
+        desc: 'Microsoft · GPT-4 powered',
+        icon: '❖',
+        color: '#7B5EF6',
+        url: q => `https://copilot.microsoft.com/?q=${encodeURIComponent(q)}`,
+        fallback: 'https://copilot.microsoft.com'
+      },
+    ];
+
+    function updateCount(el) {
+      document.getElementById('count').textContent = el.value.length;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    function launch(model) {
+      const q = document.getElementById('prompt').value.trim();
+      if (!q) {
+        showToast('Type a question first!');
+        return;
+      }
+      const url = model.url(q);
+      window.open(url, '_blank');
+    }
+
+    // Render grid
+    const grid = document.getElementById('grid');
+    models.forEach(m => {
+      const btn = document.createElement('button');
+      btn.className = 'model-btn';
+      btn.style.setProperty('--model-color', m.color);
+      btn.innerHTML = `
+        <div class="model-icon" style="background:${m.color}22; color:${m.color}">${m.icon}</div>
+        <div class="model-name">${m.name}</div>
+        <div class="model-desc">${m.desc}</div>
+        <div class="model-arrow">↗</div>
+      `;
+      btn.addEventListener('click', () => launch(m));
+      grid.appendChild(btn);
+    });
+
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
